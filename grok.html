@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>德宇&依玲的特斯拉计划</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: white;
+      min-height: 100vh;
+      background: url('https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-3-Performance-Hero-Desktop-LHD.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 50, 0.5);
+      z-index: 1;
+    }
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 1200px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 4rem;
+      margin: 0.5em 0 0.2em;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    }
+    .subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    .calculators {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    .calc-box {
+      background: rgba(0, 0, 0, 0.65);
+      padding: 2rem;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 15px cyan;
+    }
+    .result {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(0, 255, 255, 0.2);
+      border-radius: 12px;
+      font-size: 1.4rem;
+    }
+    .gallery {
+      margin: 3rem 0;
+      width: 100%;
+    }
+    .gallery h2 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .btn {
+      padding: 14px 40px;
+      font-size: 1.3rem;
+      background: #ff073a;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(255, 7, 58, 0.5);
+      margin: 2rem 1rem;
+    }
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(255, 7, 58, 0.7);
+    }
+    footer {
+      margin-top: auto;
+      padding: 2rem 0;
+      opacity: 0.8;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>德宇&依玲的特斯拉计划</h1>
+    <p class="subtitle">一起冲Model 3 Premium！股价波动大，但梦想不变～</p>
+
+    <div class="calculators">
+      <!-- 月供计算器 -->
+      <div class="calc-box">
+        <h2>Model 3 Premium 分期计算器（马来西亚）</h2>
+        <p>参考价：Premium Long Range RWD RM185,000（2026年2月）</p>
+        
+        <label>车辆总价 (RM)：</label>
+        <input type="number" id="price" value="185000" min="0" step="1000">
+
+        <label>首付比例 (%)：</label>
+        <input type="number" id="downPct" value="20" min="0" max="100" step="5">
+
+        <label>贷款年利率 (%)：</label>
+        <input type="number" id="rate" value="0.78" min="0" step="0.01">
+
+        <label>分期月数 (个月)：</label>
+        <input type="number" id="months" value="84" min="1" step="12">
+
+        <button class="btn" onclick="calculateLoan()">计算每月分期</button>
+
+        <div id="loanResult" class="result"></div>
+      </div>
+
+      <!-- 实时股价（TradingView Widget） -->
+      <div class="calc-box">
+        <h2>特斯拉股价 (TSLA) 实时</h2>
+        <p style="font-size:0.9rem; opacity:0.8; margin-bottom:1rem;">
+          美股交易时段实时更新
+        </p>
+
+        <!-- TradingView 实时股价 widget -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright">
+            <a href="https://www.tradingview.com/symbols/NASDAQ-TSLA/" rel="noopener nofollow" target="_blank">
+              <span class="blue-text">TSLA stock price</span>
+            </a>
+            <span class="trademark"> by TradingView</span>
+          </div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+          {
+            "symbol": "NASDAQ:TSLA",
+            "width": "100%",
+            "colorTheme": "dark",
+            "isTransparent": true,
+            "locale": "zh"
+          }
+          </script>
+        </div>
+
+        <p style="font-size:0.85rem; opacity:0.7; margin-top:1rem;">
+          数据来源于 TradingView，交易时间外显示最新收盘价
+        </p>
+      </div>
+    </div>
+
+    <!-- 新增照片画廊部分 -->
+    <div class="gallery">
+      <h2>Elon Musk 与 Model 3 / Model Y 灵感图</h2>
+      <div class="gallery-grid">
+        <img src="http://media.wired.com/photos/5ab16485adec2c73584304fa/master/pass/Model-3---Red-Rear-Sunset.jpg" alt="Tesla Model 3 红色侧后方经典照">
+        <img src="https://s1.cdn.autoevolution.com/images/news/2024-tesla-model-3-has-just-landed-in-the-uk-and-this-is-how-much-it-costs-222925-7.jpg" alt="Tesla Model 3 红色侧面官方图">
+        <img src="https://topelectricsuv.com/wp-content/uploads/2025/03/2026-Tesla-Model-Y-performance-facelift-White-1024x576.jpg" alt="Tesla Model Y 白银未来感渲染图">
+        <img src="https://unpluggedperformance.com/wp-content/uploads/2024/12/Tesla-Model-Y-18-inch-UP.FIT-Forged-PD-Wheel-and-Tire-Package-Satin-Black-Unplugged-Performance-Image-12.jpg" alt="Tesla Model Y 白色侧面酷炫改装照">
+        <img src="https://www.torquenews.com/sites/default/files/styles/amp_metadata_content_image_min_696px_wide/public/images/Elon%20Musk%2C%20Tesla%20Model%20S%2C%203%2C%20Y%2C%20X%20%26%20Cybertruck_5.jpg?itok=9T0fg9C3" alt="Elon Musk 与多款Tesla车型合影">
+        <img src="https://www.reuters.com/resizer/v2/MJSUGPHHZRIUHCLD54FYDZ7JKQ.jpg?auth=ecdc650813f40669d05a0b0c31a273c9747c497c99cba642122a5a8681363f58&width=1080&quality=80" alt="Elon Musk 在Model 3 生产线上">
+      </div>
+    </div>
+
+    <button class="btn" onclick="alert('德宇&依玲冲啊！Model 3 + TSLA 双双起飞！🚀')">我们也要冲！</button>
+
+    <footer>
+      © 2026 德宇&依玲的特斯拉梦 | 价格/利率以Tesla Malaysia官网为准 | 股市有风险，投资需谨慎
+    </footer>
+  </div>
+
+  <script>
+    function calculateLoan() {
+      const price = parseFloat(document.getElementById('price').value) || 0;
+      const downPct = parseFloat(document.getElementById('downPct').value) || 0;
+      const annualRate = parseFloat(document.getElementById('rate').value) || 0;
+      const months = parseFloat(document.getElementById('months').value) || 0;
+
+      if (price <= 0 || months <= 0) {
+        document.getElementById('loanResult').innerHTML = "请输入有效数字哦～";
+        return;
+      }
+
+      const downPayment = price * (downPct / 100);
+      const loanAmount = price - downPayment;
+
+      const monthlyRate = annualRate / 100 / 12;
+      let monthlyPayment = 0;
+
+      if (monthlyRate === 0) {
+        monthlyPayment = loanAmount / months;
+      } else {
+        monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months) /
+                         (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      document.getElementById('loanResult').innerHTML = `
+        <strong>首付：</strong> RM${downPayment.toFixed(2)}<br>
+        <strong>贷款金额：</strong> RM${loanAmount.toFixed(2)}<br>
+        <strong>每月分期：</strong> RM${monthlyPayment.toFixed(2)} / 月<br>
+        <small>(等额本息估算，不含保险/路税等)</small>
+      `;
+    }
+  </script>
+</body>
+</html>
