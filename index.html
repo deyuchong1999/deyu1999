@@ -200,4 +200,55 @@
     <div class="gallery">
       <h2>Elon Musk 与 Model 3 / Model Y 灵感图</h2>
       <div class="gallery-grid">
-        <img src="http://media.wired.com/photos/5ab16485adec2c73584304fa/master/pass/Model-3---Red
+        <img src="http://media.wired.com/photos/5ab16485adec2c73584304fa/master/pass/Model-3---Red-Rear-Sunset.jpg" alt="Tesla Model 3 红色侧后方经典照">
+        <img src="https://s1.cdn.autoevolution.com/images/news/2024-tesla-model-3-has-just-landed-in-the-uk-and-this-is-how-much-it-costs-222925-7.jpg" alt="Tesla Model 3 红色侧面官方图">
+        <img src="https://topelectricsuv.com/wp-content/uploads/2025/03/2026-Tesla-Model-Y-performance-facelift-White-1024x576.jpg" alt="Tesla Model Y 白银未来感渲染图">
+        <img src="https://unpluggedperformance.com/wp-content/uploads/2024/12/Tesla-Model-Y-18-inch-UP.FIT-Forged-PD-Wheel-and-Tire-Package-Satin-Black-Unplugged-Performance-Image-12.jpg" alt="Tesla Model Y 白色侧面酷炫改装照">
+        <img src="https://www.torquenews.com/sites/default/files/styles/amp_metadata_content_image_min_696px_wide/public/images/Elon%20Musk%2C%20Tesla%20Model%20S%2C%203%2C%20Y%2C%20X%20%26%20Cybertruck_5.jpg?itok=9T0fg9C3" alt="Elon Musk 与多款Tesla车型合影">
+        <img src="https://www.reuters.com/resizer/v2/MJSUGPHHZRIUHCLD54FYDZ7JKQ.jpg?auth=ecdc650813f40669d05a0b0c31a273c9747c497c99cba642122a5a8681363f58&width=1080&quality=80" alt="Elon Musk 在Model 3 生产线上">
+      </div>
+    </div>
+
+    <!-- 修改后的按钮 -->
+    <button class="btn" onclick="alert('德宇&依玲一起加油！Model 3 + TSLA 双双起飞！🚀')">我们一起加油！</button>
+
+    <footer>
+      © 2026 德宇&依玲的特斯拉梦 | 价格/利率以Tesla Malaysia官网为准 | 股市有风险，投资需谨慎
+    </footer>
+  </div>
+
+  <script>
+    function calculateLoan() {
+      const price = parseFloat(document.getElementById('price').value) || 0;
+      const downPct = parseFloat(document.getElementById('downPct').value) || 0;
+      const annualRate = parseFloat(document.getElementById('rate').value) || 0;
+      const months = parseFloat(document.getElementById('months').value) || 0;
+
+      if (price <= 0 || months <= 0) {
+        document.getElementById('loanResult').innerHTML = "请输入有效数字哦～";
+        return;
+      }
+
+      const downPayment = price * (downPct / 100);
+      const loanAmount = price - downPayment;
+
+      const monthlyRate = annualRate / 100 / 12;
+      let monthlyPayment = 0;
+
+      if (monthlyRate === 0) {
+        monthlyPayment = loanAmount / months;
+      } else {
+        monthlyPayment = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months) /
+                         (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      document.getElementById('loanResult').innerHTML = `
+        <strong>首付：</strong> RM${downPayment.toFixed(2)}<br>
+        <strong>贷款金额：</strong> RM${loanAmount.toFixed(2)}<br>
+        <strong>每月分期：</strong> RM${monthlyPayment.toFixed(2)} / 月<br>
+        <small>(等额本息估算，不含保险/路税等)</small>
+      `;
+    }
+  </script>
+</body>
+</html>
