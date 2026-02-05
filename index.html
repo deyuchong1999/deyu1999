@@ -57,15 +57,52 @@
       padding: 2rem;
       border-radius: 20px;
       width: 100%;
-      max-width: 500px;
+      max-width: 550px;
       backdrop-filter: blur(8px);
       box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
     }
-    label {
-      display: block;
-      margin: 1rem 0 0.5rem;
-      font-size: 1.1rem;
+    .stock-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
     }
+    .stock-box {
+      flex: 1;
+      min-width: 300px;
+    }
+    .preorder-section {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+    .preorder-btn {
+      display: inline-block;
+      padding: 16px 40px;
+      margin: 1rem 1.5rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+    .model3-btn {
+      background: linear-gradient(135deg, #e82127, #cc0000);
+      color: white;
+    }
+    .model3-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(232, 33, 39, 0.6);
+    }
+    .modely-btn {
+      background: linear-gradient(135deg, #00a651, #007a3d);
+      color: white;
+    }
+    .modely-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0, 166, 81, 0.6);
+    }
+    label { display: block; margin: 1rem 0 0.5rem; font-size: 1.1rem; }
     input {
       width: 100%;
       padding: 12px;
@@ -75,10 +112,7 @@
       background: rgba(255,255,255,0.2);
       color: white;
     }
-    input:focus {
-      outline: none;
-      box-shadow: 0 0 15px cyan;
-    }
+    input:focus { outline: none; box-shadow: 0 0 15px cyan; }
     .result {
       margin-top: 2rem;
       padding: 1.5rem;
@@ -90,11 +124,7 @@
       margin: 3rem 0;
       width: 100%;
     }
-    .gallery h2 {
-      font-size: 2.2rem;
-      margin-bottom: 1.5rem;
-      text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
-    }
+    .gallery h2 { font-size: 2.2rem; margin-bottom: 1.5rem; text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -107,9 +137,7 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
       transition: transform 0.3s;
     }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
+    .gallery img:hover { transform: scale(1.05); }
     .btn {
       padding: 14px 40px;
       font-size: 1.3rem;
@@ -122,17 +150,33 @@
       box-shadow: 0 8px 25px rgba(255, 7, 58, 0.5);
       margin: 2rem 1rem;
     }
-    .btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(255, 7, 58, 0.7);
+    .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 7, 58, 0.7); }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
     }
-    footer {
-      margin-top: auto;
-      padding: 2rem 0;
-      opacity: 0.8;
-      font-size: 0.9rem;
+    .modal-content {
+      margin: 10% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      background: rgba(0,0,0,0.9);
+      border-radius: 20px;
       text-align: center;
+      color: white;
+      box-shadow: 0 0 30px rgba(0,255,255,0.5);
     }
+    .modal img { max-width: 100%; border-radius: 15px; margin-bottom: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close:hover, .close:focus { color: white; }
+    footer { margin-top: auto; padding: 2rem 0; opacity: 0.8; font-size: 0.9rem; text-align: center; }
   </style>
 </head>
 <body>
@@ -163,37 +207,57 @@
         <div id="loanResult" class="result"></div>
       </div>
 
-      <!-- 实时股价（TradingView Widget） -->
+      <!-- 实时股价对比 -->
       <div class="calc-box">
-        <h2>特斯拉股价 (TSLA) 实时</h2>
-        <p style="font-size:0.9rem; opacity:0.8; margin-bottom:1rem;">
-          美股交易时段实时更新
-        </p>
+        <h2>特斯拉股价 (TSLA) 实时对比</h2>
+        <p style="font-size:0.9rem; opacity:0.8; margin-bottom:1rem;">TradingView + 官方入口</p>
 
-        <!-- TradingView 实时股价 widget -->
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <div class="tradingview-widget-copyright">
-            <a href="https://www.tradingview.com/symbols/NASDAQ-TSLA/" rel="noopener nofollow" target="_blank">
-              <span class="blue-text">TSLA stock price</span>
-            </a>
-            <span class="trademark"> by TradingView</span>
+        <div class="stock-container">
+          <!-- TradingView TSLA -->
+          <div class="stock-box">
+            <p style="margin:0 0 0.8rem; font-weight:bold;">TradingView</p>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <div class="tradingview-widget-copyright">
+                <a href="https://www.tradingview.com/symbols/NASDAQ-TSLA/" rel="noopener nofollow" target="_blank">
+                  <span class="blue-text">TSLA stock price</span>
+                </a>
+                <span class="trademark"> by TradingView</span>
+              </div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+              {
+                "symbol": "NASDAQ:TSLA",
+                "width": "100%",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "zh"
+              }
+              </script>
+            </div>
           </div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
-          {
-            "symbol": "NASDAQ:TSLA",
-            "width": "100%",
-            "colorTheme": "dark",
-            "isTransparent": true,
-            "locale": "zh"
-          }
-          </script>
-        </div>
 
-        <p style="font-size:0.85rem; opacity:0.7; margin-top:1rem;">
-          数据来源于 TradingView，交易时间外显示最新收盘价
-        </p>
+          <!-- moomoo + Yahoo 入口 -->
+          <div class="stock-box">
+            <p style="margin:0 0 1rem; font-weight:bold;">官方实时入口</p>
+            <a href="https://www.moomoo.com/stock/TSLA-US" target="_blank" class="entry-btn">去 moomoo 查看 TSLA 实时报价</a>
+            <br>
+            <a href="https://finance.yahoo.com/quote/TSLA" target="_blank" class="entry-btn yahoo-btn">去 Yahoo Finance 查看 TSLA</a>
+            <p style="font-size:0.85rem; opacity:0.7; margin-top:1rem;">
+              点击直接跳转，查看最新价格、图表和资讯（moomoo 适合新加坡/马来西亚用户）
+            </p>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <!-- 新增：马来西亚 Tesla 官网预购入口 -->
+    <div class="preorder-section">
+      <h2 style="margin-bottom: 1.5rem; font-size: 2rem; text-shadow: 0 0 15px rgba(0,255,255,0.5);">现在就行动！预订你的 Tesla</h2>
+      <a href="https://www.tesla.com/en_my/model3/design#overview" target="_blank" class="preorder-btn model3-btn">预购 Model 3（马来西亚官网）</a>
+      <a href="https://www.tesla.com/en_my/modely/design#overview" target="_blank" class="preorder-btn modely-btn">预购 Model Y（马来西亚官网）</a>
+      <p style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.9;">
+        直接进入 Tesla 马来西亚官网配置你的爱车，锁定最新优惠！
+      </p>
     </div>
 
     <!-- 照片画廊 -->
@@ -204,13 +268,21 @@
         <img src="https://s1.cdn.autoevolution.com/images/news/2024-tesla-model-3-has-just-landed-in-the-uk-and-this-is-how-much-it-costs-222925-7.jpg" alt="Tesla Model 3 红色侧面官方图">
         <img src="https://topelectricsuv.com/wp-content/uploads/2025/03/2026-Tesla-Model-Y-performance-facelift-White-1024x576.jpg" alt="Tesla Model Y 白银未来感渲染图">
         <img src="https://unpluggedperformance.com/wp-content/uploads/2024/12/Tesla-Model-Y-18-inch-UP.FIT-Forged-PD-Wheel-and-Tire-Package-Satin-Black-Unplugged-Performance-Image-12.jpg" alt="Tesla Model Y 白色侧面酷炫改装照">
-        <img src="https://www.torquenews.com/sites/default/files/styles/amp_metadata_content_image_min_696px_wide/public/images/Elon%20Musk%2C%20Tesla%20Model%20S%2C%203%2C%20Y%2C%20X%20%26%20Cybertruck_5.jpg?itok=9T0fg9C3" alt="Elon Musk 与多款Tesla车型合影">
+        <img src="https://ca-times.brightspotcdn.com/dims4/default/37f0c0d/2147483647/strip/true/crop/4800x2826+0+0/resize/1200x707!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fc4%2F1e%2Fce52c4664170a7a1a047b7d89a9b%2Fhttps-delivery-gettyimages.com%2Fdownloads%2F1183845620" alt="Elon Musk 在 Cybertruck 交付现场">
         <img src="https://www.reuters.com/resizer/v2/MJSUGPHHZRIUHCLD54FYDZ7JKQ.jpg?auth=ecdc650813f40669d05a0b0c31a273c9747c497c99cba642122a5a8681363f58&width=1080&quality=80" alt="Elon Musk 在Model 3 生产线上">
       </div>
     </div>
 
-    <!-- 修改后的按钮 -->
-    <button class="btn" onclick="alert('德宇&依玲一起加油！Model 3 + TSLA 双双起飞！🚀')">我们一起加油！</button>
+    <button class="btn" onclick="showModal()">我们一起加油！</button>
+
+    <div id="motivationModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img src="https://i.ibb.co/7x3F5WFR/IMG-8666.jpg" alt="德宇&依玲的甜蜜合照">
+        <h2 style="margin: 1rem 0;">我们一起加油！</h2>
+        <p>Model 3 + TSLA 双双起飞！<br>我们的梦想，正在路上～🚀❤️</p>
+      </div>
+    </div>
 
     <footer>
       © 2026 德宇&依玲的特斯拉梦 | 价格/利率以Tesla Malaysia官网为准 | 股市有风险，投资需谨慎
@@ -248,6 +320,21 @@
         <strong>每月分期：</strong> RM${monthlyPayment.toFixed(2)} / 月<br>
         <small>(等额本息估算，不含保险/路税等)</small>
       `;
+    }
+
+    function showModal() {
+      document.getElementById('motivationModal').style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById('motivationModal').style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('motivationModal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
   </script>
 </body>
